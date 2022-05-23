@@ -1,6 +1,7 @@
 package com.milo.dailytodolist.project.application;
 
 import com.milo.dailytodolist.project.application.port.ProjectUseCase;
+import com.milo.dailytodolist.project.db.ProjectJpaRepository;
 import com.milo.dailytodolist.project.domain.Project;
 import com.milo.dailytodolist.project.domain.ProjectRepository;
 import com.milo.dailytodolist.project.domain.ProjectStatus;
@@ -16,11 +17,11 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class ProjectService implements ProjectUseCase {
 
-    private final ProjectRepository repository;
+    private final ProjectJpaRepository repository;
 
     @Override
     public List<Project> findAll() {
-        return repository.getAll();
+        return repository.findAll();
     }
 
     @Override
@@ -30,7 +31,7 @@ public class ProjectService implements ProjectUseCase {
 
     @Override
     public List<Project> findByStatus(ProjectStatus status) {
-        return repository.getAll()
+        return repository.findAll()
                 .stream()
                 .filter(project -> project.getStatus() == status)
                 .collect(Collectors.toList());
@@ -38,7 +39,7 @@ public class ProjectService implements ProjectUseCase {
 
     @Override
     public void removeById(Long id) {
-        repository.removeById(id);
+        repository.deleteById(id);
     }
 
     @Override

@@ -66,7 +66,6 @@ public class ProjectController {
         }
     }
 
-
     @Data
     private static class RestProjectCommand {
 

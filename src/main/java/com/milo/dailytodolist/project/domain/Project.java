@@ -2,11 +2,19 @@ package com.milo.dailytodolist.project.domain;
 
 import com.milo.dailytodolist.owner.domain.ProjectOwner;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
 @Data
+@Entity
+@NoArgsConstructor
 public class Project {
 
+    @Id
+    @GeneratedValue
     Long id;
     String name;
     ProjectStatus status;

@@ -18,6 +18,7 @@ public class Project {
     Long id;
     String name;
     ProjectStatus status;
+    Long projectLogoId;
 //    LocalDateTime startDate;
 //    LocalDateTime deliveryDate;
 //    LocalDateTime createdDate;

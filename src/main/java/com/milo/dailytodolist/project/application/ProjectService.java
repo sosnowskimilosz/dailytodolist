@@ -3,8 +3,9 @@ package com.milo.dailytodolist.project.application;
 import com.milo.dailytodolist.project.application.port.ProjectUseCase;
 import com.milo.dailytodolist.project.db.ProjectJpaRepository;
 import com.milo.dailytodolist.project.domain.Project;
-import com.milo.dailytodolist.project.domain.ProjectRepository;
 import com.milo.dailytodolist.project.domain.ProjectStatus;
+import com.milo.dailytodolist.uploads.application.port.UploadUseCase;
+import com.milo.dailytodolist.uploads.domain.Upload;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 public class ProjectService implements ProjectUseCase {
 
     private final ProjectJpaRepository repository;
+    private final UploadUseCase uploadService;
 
     @Override
     public List<Project> findAll() {
@@ -58,5 +60,25 @@ public class ProjectService implements ProjectUseCase {
                 }).orElseGet(() -> new UpdateProjectResponse(
                         false, Collections.singletonList("Project with id: " + command.getId() + " not found")
                 ));
+    }
+
+    @Override
+    public void updateProjectLogo(UpdateProjectLogoCommand command) {
+        repository.findById(command.getId())
+                .ifPresent(project -> {
+                    Upload newUpload = uploadService.save(new UploadUseCase.SaveUploadCommand(command.getFile(), command.getFileName(), command.getContentType()));
+                    project.setProjectLogoId(newUpload.getId());
+                    repository.save(project);
+                });
+    }
+
+    @Override
+    public void removeProjectLogo(Long id) {
+        repository.findById(id)
+                .ifPresent(project -> {
+                    uploadService.removeById(project.getProjectLogoId());
+                    project.setProjectLogoId(null);
+                    repository.save(project);
+                });
     }
 }

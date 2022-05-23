@@ -24,6 +24,18 @@ public interface ProjectUseCase {
 
     UpdateProjectResponse updateProject(UpdateProjectCommand command);
 
+    void updateProjectLogo(UpdateProjectLogoCommand command);
+
+    void removeProjectLogo(Long id);
+
+
+    @Value
+    class UpdateProjectLogoCommand{
+        Long id;
+        byte[] file;
+        String fileName;
+        String contentType;
+    }
 
     @Value
     class CreateProjectCommand {

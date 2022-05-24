@@ -4,9 +4,7 @@ import com.milo.dailytodolist.owner.domain.ProjectOwner;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Data
 @Entity
@@ -17,6 +15,7 @@ public class Project {
     @GeneratedValue
     Long id;
     String name;
+    @Enumerated(EnumType.STRING)
     ProjectStatus status;
     Long projectLogoId;
 //    LocalDateTime startDate;

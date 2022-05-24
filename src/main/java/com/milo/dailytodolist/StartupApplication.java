@@ -1,5 +1,7 @@
 package com.milo.dailytodolist;
 
+import com.milo.dailytodolist.owner.application.port.ProjectOwnerUseCase;
+import com.milo.dailytodolist.owner.application.port.ProjectOwnerUseCase.CreateProjectOwnerCommand;
 import com.milo.dailytodolist.owner.domain.ProjectOwner;
 import com.milo.dailytodolist.project.application.ProjectService;
 import com.milo.dailytodolist.project.application.port.ProjectUseCase.CreateProjectCommand;
@@ -13,22 +15,26 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class StartupApplication implements CommandLineRunner {
 
-    private final ProjectService service;
+    private final ProjectService projectService;
+    private final ProjectOwnerUseCase projectOwnerService;
 
     @Override
     public void run(String... args) throws Exception {
         initData();
-        for (Project project:service.findAll()) {
+        for (Project project: projectService.findAll()) {
             System.out.println(project);
+        }
+        for (ProjectOwner owner: projectOwnerService.getAll()) {
+            System.out.println(owner);
         }
     }
 
     private void initData() {
-
-//        ProjectOwner milosz = new ProjectOwner(1L,"Milosz");
-//        ProjectOwner adam = new ProjectOwner(2L,"Adam");
-        Project project1 = service.addProject(new CreateProjectCommand("Zakup mieszkania",  ProjectStatus.STARTED));
-        Project project2 = service.addProject(new CreateProjectCommand("Zakupy", ProjectStatus.SUBMITTED));
-        Project project3 = service.addProject(new CreateProjectCommand("Zmiana pracy",  ProjectStatus.ON_HOLD));
+        ProjectOwner milosz = projectOwnerService.createProjectOwner(new CreateProjectOwnerCommand("Milosz","pass123"));
+        ProjectOwner adam = projectOwnerService.createProjectOwner(new CreateProjectOwnerCommand("Adam","pass123"));
+        ProjectOwner marian = projectOwnerService.createProjectOwner(new CreateProjectOwnerCommand("Marian","pass123"));
+        Project project1 = projectService.addProject(new CreateProjectCommand("Zakup mieszkania",  ProjectStatus.STARTED));
+        Project project2 = projectService.addProject(new CreateProjectCommand("Zakupy", ProjectStatus.SUBMITTED));
+        Project project3 = projectService.addProject(new CreateProjectCommand("Zmiana pracy",  ProjectStatus.ON_HOLD));
     }
 }

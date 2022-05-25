@@ -76,9 +76,9 @@ public class ProjectOwnerController {
     @Data
     private static class ProjectOwnerRestCommand {
 
-        @NotBlank
+        @NotBlank(message = "Login can not be empty")
         String name;
-        @NotBlank
+        @NotBlank(message = "Password can not be empty")
         String password;
 
         CreateProjectOwnerCommand toCreateProjectOwnerCommand(){

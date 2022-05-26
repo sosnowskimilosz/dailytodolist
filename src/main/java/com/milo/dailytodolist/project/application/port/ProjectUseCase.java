@@ -28,6 +28,9 @@ public interface ProjectUseCase {
 
     void removeProjectLogo(Long id);
 
+    void assignProjectToOwner(Long projectId, String loginOfOwner);
+
+    List<Project> findByOwnerLogin(String login);
 
     @Value
     class UpdateProjectLogoCommand{
@@ -41,11 +44,7 @@ public interface ProjectUseCase {
     class CreateProjectCommand {
 
         String name;
-        ProjectStatus status;
-
-        public Project toProject(){
-            return new Project(name, status);
-        }
+        Long ownerId;
     }
 
     @Value
@@ -60,12 +59,16 @@ public interface ProjectUseCase {
     class UpdateProjectCommand {
         Long id;
         String name;
+        Long authorId;
         ProjectStatus status;
 
         public Project updateFields(Project project) {
             if (name != null) {
                 project.setName(name);
             }
+//            if(authorId != null){
+//                project.setOwner();
+//            }
             if(status!=null){
                 project.setStatus(status);
             }

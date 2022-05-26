@@ -5,14 +5,12 @@ import com.milo.dailytodolist.owner.application.port.ProjectOwnerUseCase.CreateP
 import com.milo.dailytodolist.owner.domain.ProjectOwner;
 import com.milo.dailytodolist.project.application.ProjectService;
 import com.milo.dailytodolist.project.application.port.ProjectUseCase.CreateProjectCommand;
-import com.milo.dailytodolist.project.db.ProjectJpaRepository;
 import com.milo.dailytodolist.project.domain.Project;
 import com.milo.dailytodolist.project.domain.ProjectStatus;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-import java.util.Set;
 
 @Component
 @AllArgsConstructor
@@ -36,9 +34,11 @@ public class StartupApplication implements CommandLineRunner {
         ProjectOwner milosz = projectOwnerService.createProjectOwner(new CreateProjectOwnerCommand("Milosz","pass123"));
         ProjectOwner adam = projectOwnerService.createProjectOwner(new CreateProjectOwnerCommand("Adam","pass123"));
         ProjectOwner marian = projectOwnerService.createProjectOwner(new CreateProjectOwnerCommand("Marian","pass123"));
-        Project project1 = projectService.addProject(new CreateProjectCommand("Zakup mieszkania",  ProjectStatus.STARTED));
-        Project project2 = projectService.addProject(new CreateProjectCommand("Zakupy", ProjectStatus.SUBMITTED));
-        Project project3 = projectService.addProject(new CreateProjectCommand("Zmiana pracy",  ProjectStatus.ON_HOLD));
 
+        Project project1 = projectService.addProject(new CreateProjectCommand("Zakup mieszkania",  milosz.getId()));
+        Project project2 = projectService.addProject(new CreateProjectCommand("Zakupy", milosz.getId()));
+        Project project3 = projectService.addProject(new CreateProjectCommand("Zmiana pracy",  adam.getId()));
+        Project project4 = projectService.addProject(new CreateProjectCommand("Nauka C#",  milosz.getId()));
+        projectService.assignProjectToOwner(project1.getId(), milosz.getName());
     }
 }

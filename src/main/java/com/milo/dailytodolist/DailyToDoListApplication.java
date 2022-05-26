@@ -11,5 +11,4 @@ public class DailyToDoListApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(DailyToDoListApplication.class, args);
 	}
-
 }

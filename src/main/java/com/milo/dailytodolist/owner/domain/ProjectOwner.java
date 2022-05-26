@@ -3,6 +3,7 @@ package com.milo.dailytodolist.owner.domain;
 import com.milo.dailytodolist.project.domain.Project;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -15,6 +16,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @EntityListeners(AuditingEntityListener.class)
+@ToString(exclude = "projects")
 public class ProjectOwner {
 
     @Id
@@ -22,7 +24,8 @@ public class ProjectOwner {
     Long id;
     String name;
     String password;
-//    Set<Project> projects;
+    @OneToMany
+    Set<Project> projects;
 
     @CreatedDate
     LocalDateTime createdAt;
@@ -33,4 +36,5 @@ public class ProjectOwner {
         this.name = name;
         this.password = password;
     }
+
 }

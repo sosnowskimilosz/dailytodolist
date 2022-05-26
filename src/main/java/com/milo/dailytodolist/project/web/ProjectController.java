@@ -85,10 +85,10 @@ public class ProjectController {
         projectService.removeProjectLogo(id);
     }
 
-    @PutMapping("/{id}/addowner")
+    @PutMapping("/{id}/updateowner")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void addOwnerToProject(@PathVariable Long id, @RequestParam("login") String login) {
-        projectService.assignProjectToOwner(id, login);
+    public void changeProjectOwner(@PathVariable Long id, @RequestParam("login") String login) {
+        projectService.changeProjectOwner(id, login);
     }
 
     @GetMapping("/byowner")
@@ -104,16 +104,16 @@ public class ProjectController {
         String name;
 
         @PositiveOrZero
-        Long authorId;
+        Long owner;
 
         ProjectStatus status;
 
         CreateProjectCommand toCreateProjectCommand() {
-            return new CreateProjectCommand(name, authorId);
+            return new CreateProjectCommand(name, owner);
         }
 
         UpdateProjectCommand toUpdateProjectCommand(Long id) {
-            return new UpdateProjectCommand(id, name, authorId, status);
+            return new UpdateProjectCommand(id, name, owner, status);
         }
     }
 }

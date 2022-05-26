@@ -22,7 +22,7 @@ public class Project {
     Long id;
     String name;
     @Enumerated(EnumType.STRING)
-    ProjectStatus status=ProjectStatus.STARTED;
+    ProjectStatus status=ProjectStatus.SUBMITTED;
     Long projectLogoId;
     @ManyToOne
     ProjectOwner owner;

@@ -36,5 +36,4 @@ public class ProjectOwner {
         this.name = name;
         this.password = password;
     }
-
 }

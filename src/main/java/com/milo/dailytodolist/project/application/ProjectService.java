@@ -53,24 +53,41 @@ public class ProjectService implements ProjectUseCase {
         return projectRepository.save(project);
     }
 
-    private Project toProject(CreateProjectCommand command){
-        ProjectOwner owner = ownerRepository
-                .findById(command.getOwnerId())
-                .orElseThrow(() -> new IllegalArgumentException("There is no owner with id: " + command.getOwnerId()));
+    private Project toProject(CreateProjectCommand command) {
+        ProjectOwner owner = findOwner(command.getOwnerId());
         return new Project(command.getName(), owner);
     }
 
+    private ProjectOwner findOwner(Long ownerId) {
+        ProjectOwner owner = ownerRepository
+                .findById(ownerId)
+                .orElseThrow(() -> new IllegalArgumentException("There is no owner with id: " + ownerId));
+        return owner;
+    }
 
     @Override
     public UpdateProjectResponse updateProject(UpdateProjectCommand command) {
         return projectRepository.findById(command.getId())
                 .map(project -> {
-                    Project projectToUpdate = command.updateFields(project);
+                    Project projectToUpdate = updateFields(project, command);
                     projectRepository.save(projectToUpdate);
                     return UpdateProjectResponse.SUCCESS;
                 }).orElseGet(() -> new UpdateProjectResponse(
                         false, Collections.singletonList("Project with id: " + command.getId() + " not found")
                 ));
+    }
+
+    public Project updateFields(Project project, UpdateProjectCommand command) {
+        if (command.getName() != null) {
+            project.setName(command.getName());
+        }
+        if (command.getOwnerId() != null) {
+            project.setOwner(findOwner(command.getOwnerId()));
+        }
+        if (command.getStatus() != null) {
+            project.setStatus(command.getStatus());
+        }
+        return project;
     }
 
     @Override
@@ -94,7 +111,7 @@ public class ProjectService implements ProjectUseCase {
     }
 
     @Override
-    public void assignProjectToOwner(Long projectId, String login) {
+    public void changeProjectOwner(Long projectId, String login) {
         projectRepository.findById(projectId)
                 .ifPresent(project -> {
                     ProjectOwner owner = ownerRepository.findAll()

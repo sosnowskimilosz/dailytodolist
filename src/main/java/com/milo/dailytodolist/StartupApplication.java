@@ -20,25 +20,25 @@ public class StartupApplication implements CommandLineRunner {
     private final ProjectOwnerUseCase projectOwnerService;
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         initData();
-        for (Project project: projectService.findAll()) {
+        for (Project project : projectService.findAll()) {
             System.out.println(project);
         }
-        for (ProjectOwner owner: projectOwnerService.getAll()) {
+        for (ProjectOwner owner : projectOwnerService.getAll()) {
             System.out.println(owner);
         }
     }
 
     private void initData() {
-        ProjectOwner milosz = projectOwnerService.createProjectOwner(new CreateProjectOwnerCommand("Milosz","pass123"));
-        ProjectOwner adam = projectOwnerService.createProjectOwner(new CreateProjectOwnerCommand("Adam","pass123"));
-        ProjectOwner marian = projectOwnerService.createProjectOwner(new CreateProjectOwnerCommand("Marian","pass123"));
+        ProjectOwner milosz = projectOwnerService.createProjectOwner(new CreateProjectOwnerCommand("Milosz", "pass123"));
+        ProjectOwner adam = projectOwnerService.createProjectOwner(new CreateProjectOwnerCommand("Adam", "pass123"));
+        ProjectOwner marian = projectOwnerService.createProjectOwner(new CreateProjectOwnerCommand("Marian", "pass123"));
 
-        Project project1 = projectService.addProject(new CreateProjectCommand("Zakup mieszkania",  milosz.getId()));
+        Project project1 = projectService.addProject(new CreateProjectCommand("Zakup mieszkania", milosz.getId()));
         Project project2 = projectService.addProject(new CreateProjectCommand("Zakupy", milosz.getId()));
-        Project project3 = projectService.addProject(new CreateProjectCommand("Zmiana pracy",  adam.getId()));
-        Project project4 = projectService.addProject(new CreateProjectCommand("Nauka C#",  milosz.getId()));
-        projectService.assignProjectToOwner(project1.getId(), milosz.getName());
+        Project project3 = projectService.addProject(new CreateProjectCommand("Zmiana pracy", adam.getId()));
+        Project project4 = projectService.addProject(new CreateProjectCommand("Nauka C#", milosz.getId()));
+        projectService.changeProjectOwner(project1.getId(), milosz.getName());
     }
 }

@@ -2,9 +2,7 @@ package com.milo.dailytodolist.project.domain;
 
 import com.milo.dailytodolist.jpa.BaseEntity;
 import com.milo.dailytodolist.owner.domain.ProjectOwner;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -14,7 +12,9 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
+@ToString
 @Entity
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)

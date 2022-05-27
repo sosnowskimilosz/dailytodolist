@@ -1,7 +1,7 @@
 package com.milo.dailytodolist.owner.domain;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.milo.dailytodolist.jpa.BaseEntity;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -9,15 +9,14 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Data
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-public class ProjectOwner {
+public class ProjectOwner extends BaseEntity {
 
-    @Id
-    @GeneratedValue
-    Long id;
     String name;
     String password;
 

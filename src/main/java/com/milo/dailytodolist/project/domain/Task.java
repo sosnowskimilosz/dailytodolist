@@ -1,12 +1,13 @@
 package com.milo.dailytodolist.project.domain;
 
 import com.milo.dailytodolist.jpa.BaseEntity;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
-@Data
+@Getter
+@Setter
+@ToString
 @Entity
 @NoArgsConstructor
 public class Task extends BaseEntity {

@@ -53,6 +53,18 @@ public class TaskController {
         return new CreatedURI("/" + task.getId().toString()).uri();
     }
 
+    @PutMapping("/{projectId}/tasks/{taskId}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void updateTask(@PathVariable Long taskId, @RequestBody RestTaskCommand command){
+        taskService.updateTask(command.toUpdateTaskCommand(taskId));
+    }
+
+    @PutMapping("/{projectId}/tasks/{taskId}/changestatus")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void changeStatus(@PathVariable Long taskId){
+        taskService.changeDone(taskId);
+    }
+
     @Value
     private static class RestTaskCommand {
         @NotNull
@@ -64,7 +76,7 @@ public class TaskController {
         }
 
         UpdateTaskCommand toUpdateTaskCommand(Long id) {
-            return new UpdateTaskCommand(id, title, done);
+            return new UpdateTaskCommand(id, title);
         }
     }
 }

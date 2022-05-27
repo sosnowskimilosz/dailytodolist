@@ -68,6 +68,26 @@ public class TaskService implements TaskUseCase {
 
     @Override
     public UpdateTaskResponse updateTask(UpdateTaskCommand command) {
-        return null;
+        return taskRepository.findById(command.getId())
+                .map(task -> {
+                    Task taskToUpdate = updateTaskFields(task,command);
+                    taskRepository.save(taskToUpdate);
+                    return UpdateTaskResponse.SUCCESS;
+                }).orElseGet(()-> new UpdateTaskResponse(false,List.of("Task with id: " + command.getId() + " not found")));
+    }
+
+    @Override
+    @Transactional
+    public void changeDone(Long id) {
+        Task task = findTask(id);
+        task.setDone(!task.isDone());
+    }
+
+
+    private Task updateTaskFields(Task task, UpdateTaskCommand command){
+        if(command.getTitle() != null){
+            task.setTitle(command.getTitle());
+        }
+        return task;
     }
 }

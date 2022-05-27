@@ -17,6 +17,8 @@ public interface TaskUseCase {
 
     UpdateTaskResponse updateTask(UpdateTaskCommand command);
 
+    void changeDone(Long id);
+
     @Value
     class CreateTaskCommand {
         String title;
@@ -27,7 +29,6 @@ public interface TaskUseCase {
     class UpdateTaskCommand {
         Long id;
         String title;
-        boolean done;
     }
 
     @Value

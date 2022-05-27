@@ -10,6 +10,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @Entity
@@ -22,17 +24,21 @@ public class Project {
     Long id;
     String name;
     @Enumerated(EnumType.STRING)
-    ProjectStatus status=ProjectStatus.SUBMITTED;
+    ProjectStatus status = ProjectStatus.SUBMITTED;
     Long projectLogoId;
     @ManyToOne
+    @JoinColumn(name = "owner_id")
     ProjectOwner owner;
-//    LocalDateTime startDate;
+
+    //    LocalDateTime startDate;
 //    LocalDateTime deliveryDate;
     @CreatedDate
     LocalDateTime createdAt;
     @LastModifiedDate
     LocalDateTime lastModification;
 
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    Set<Task> tasks = new HashSet<>();
 
     public Project(String name, ProjectStatus status) {
         this.name = name;
@@ -42,5 +48,13 @@ public class Project {
     public Project(String name, ProjectOwner owner) {
         this.name = name;
         this.owner = owner;
+    }
+
+    public void addTask(Task task) {
+        tasks.add(task);
+    }
+
+    public void removeTask(Task task) {
+        tasks.remove(task);
     }
 }

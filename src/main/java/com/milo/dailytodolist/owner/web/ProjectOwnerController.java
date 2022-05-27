@@ -6,7 +6,6 @@ import com.milo.dailytodolist.owner.application.port.ProjectOwnerUseCase.CreateP
 import com.milo.dailytodolist.owner.application.port.ProjectOwnerUseCase.UpdateProjectOwnerCommand;
 import com.milo.dailytodolist.owner.application.port.ProjectOwnerUseCase.UpdateProjectOwnerResponse;
 import com.milo.dailytodolist.owner.domain.ProjectOwner;
-import com.milo.dailytodolist.project.domain.Project;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.http.HttpStatus;

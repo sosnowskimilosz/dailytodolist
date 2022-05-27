@@ -1,6 +1,5 @@
 package com.milo.dailytodolist.project.application.port;
 
-import com.milo.dailytodolist.owner.domain.ProjectOwner;
 import com.milo.dailytodolist.project.domain.Project;
 import com.milo.dailytodolist.project.domain.ProjectStatus;
 import lombok.Value;
@@ -12,13 +11,13 @@ import static java.util.Collections.emptyList;
 
 public interface ProjectUseCase {
 
-    List<Project> findAll();
+    List<Project> findAllProjects();
 
-    Optional<Project> findById(Long id);
+    Optional<Project> findProjectById(Long id);
 
-    List<Project> findByStatus(ProjectStatus status);
+    List<Project> findProjectByStatus(ProjectStatus status);
 
-    void removeById(Long id);
+    void removeProjectById(Long id);
 
     Project addProject(CreateProjectCommand command);
 
@@ -30,7 +29,7 @@ public interface ProjectUseCase {
 
     void changeProjectOwner(Long projectId, String loginOfOwner);
 
-    List<Project> findByOwnerLogin(String login);
+    List<Project> findProjectByOwnerLogin(String login);
 
     @Value
     class UpdateProjectLogoCommand{
@@ -60,6 +59,5 @@ public interface ProjectUseCase {
         String name;
         Long ownerId;
         ProjectStatus status;
-
     }
 }

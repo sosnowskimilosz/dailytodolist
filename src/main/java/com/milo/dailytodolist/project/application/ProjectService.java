@@ -4,6 +4,7 @@ import com.milo.dailytodolist.owner.db.ProjectOwnerJpaRepository;
 import com.milo.dailytodolist.owner.domain.ProjectOwner;
 import com.milo.dailytodolist.project.application.port.ProjectUseCase;
 import com.milo.dailytodolist.project.db.ProjectJpaRepository;
+import com.milo.dailytodolist.project.db.TaskJpaRepository;
 import com.milo.dailytodolist.project.domain.Project;
 import com.milo.dailytodolist.project.domain.ProjectStatus;
 import com.milo.dailytodolist.uploads.application.port.UploadUseCase;
@@ -11,31 +12,30 @@ import com.milo.dailytodolist.uploads.domain.Upload;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
 public class ProjectService implements ProjectUseCase {
 
+    private final TaskJpaRepository taskJpaRepository;
     private final ProjectJpaRepository projectRepository;
     private final ProjectOwnerJpaRepository ownerRepository;
     private final UploadUseCase uploadService;
 
     @Override
-    public List<Project> findAll() {
+    public List<Project> findAllProjects() {
         return projectRepository.findAll();
     }
 
     @Override
-    public Optional<Project> findById(Long id) {
+    public Optional<Project> findProjectById(Long id) {
         return projectRepository.findById(id);
     }
 
     @Override
-    public List<Project> findByStatus(ProjectStatus status) {
+    public List<Project> findProjectByStatus(ProjectStatus status) {
         return projectRepository.findAll()
                 .stream()
                 .filter(project -> project.getStatus() == status)
@@ -43,14 +43,14 @@ public class ProjectService implements ProjectUseCase {
     }
 
     @Override
-    public void removeById(Long id) {
-        projectRepository.deleteById(id);
-    }
-
-    @Override
     public Project addProject(CreateProjectCommand command) {
         Project project = toProject(command);
         return projectRepository.save(project);
+    }
+
+    @Override
+    public void removeProjectById(Long id) {
+        projectRepository.deleteById(id);
     }
 
     private Project toProject(CreateProjectCommand command) {
@@ -69,7 +69,7 @@ public class ProjectService implements ProjectUseCase {
     public UpdateProjectResponse updateProject(UpdateProjectCommand command) {
         return projectRepository.findById(command.getId())
                 .map(project -> {
-                    Project projectToUpdate = updateFields(project, command);
+                    Project projectToUpdate = updateProjectFields(project, command);
                     projectRepository.save(projectToUpdate);
                     return UpdateProjectResponse.SUCCESS;
                 }).orElseGet(() -> new UpdateProjectResponse(
@@ -77,7 +77,7 @@ public class ProjectService implements ProjectUseCase {
                 ));
     }
 
-    public Project updateFields(Project project, UpdateProjectCommand command) {
+    public Project updateProjectFields(Project project, UpdateProjectCommand command) {
         if (command.getName() != null) {
             project.setName(command.getName());
         }
@@ -126,7 +126,7 @@ public class ProjectService implements ProjectUseCase {
     }
 
     @Override
-    public List<Project> findByOwnerLogin(String login) {
+    public List<Project> findProjectByOwnerLogin(String login) {
         return projectRepository.findAll()
                 .stream()
                 .filter(project -> project.getOwner() != null)

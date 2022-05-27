@@ -31,12 +31,12 @@ public class ProjectController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<Project> getAll() {
-        return projectService.findAll();
+        return projectService.findAllProjects();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable Long id) {
-        return projectService.findById(id)
+        return projectService.findProjectById(id)
                 .map(project -> ResponseEntity.ok(project))
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -44,7 +44,7 @@ public class ProjectController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteById(@PathVariable Long id) {
-        projectService.removeById(id);
+        projectService.removeProjectById(id);
     }
 
     @PostMapping
@@ -94,7 +94,7 @@ public class ProjectController {
     @GetMapping("/byowner")
     @ResponseStatus(HttpStatus.OK)
     public List<Project> findProjectsByOwnerLogin(@RequestParam("login") String login) {
-        return projectService.findByOwnerLogin(login);
+        return projectService.findProjectByOwnerLogin(login);
     }
 
     @Data

@@ -1,5 +1,6 @@
 package com.milo.dailytodolist.project.domain;
 
+import com.milo.dailytodolist.jpa.BaseEntity;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -8,11 +9,8 @@ import javax.persistence.*;
 @Data
 @Entity
 @NoArgsConstructor
-public class Task {
+public class Task extends BaseEntity {
 
-    @Id
-    @GeneratedValue
-    private Long id;
     private String title;
     private boolean done;
 

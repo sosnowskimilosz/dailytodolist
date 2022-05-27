@@ -1,5 +1,6 @@
 package com.milo.dailytodolist.project.domain;
 
+import com.milo.dailytodolist.jpa.BaseEntity;
 import com.milo.dailytodolist.owner.domain.ProjectOwner;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,11 +18,8 @@ import java.util.Set;
 @Entity
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class Project {
+public class Project extends BaseEntity {
 
-    @Id
-    @GeneratedValue
-    Long id;
     String name;
     @Enumerated(EnumType.STRING)
     ProjectStatus status = ProjectStatus.SUBMITTED;
@@ -39,11 +37,6 @@ public class Project {
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     Set<Task> tasks = new HashSet<>();
-
-    public Project(String name, ProjectStatus status) {
-        this.name = name;
-        this.status = status;
-    }
 
     public Project(String name, ProjectOwner owner) {
         this.name = name;

@@ -1,5 +1,6 @@
 package com.milo.dailytodolist.uploads.domain;
 
+import com.milo.dailytodolist.jpa.BaseEntity;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
@@ -16,19 +17,14 @@ import java.time.LocalDateTime;
 @Entity
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class Upload {
+public class Upload extends BaseEntity {
 
-    @Id
-    @GeneratedValue
-    Long id;
     byte[] file;
     String fileName;
     String contentType;
 
     @CreatedDate
     LocalDateTime createdAt;
-    @LastModifiedDate
-    LocalDateTime lastModifiedAt;
 
     public Upload(byte[] file, String fileName, String contentType) {
         this.file = file;

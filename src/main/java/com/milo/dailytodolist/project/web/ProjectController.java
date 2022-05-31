@@ -34,7 +34,6 @@ public class ProjectController {
     private final ProjectUseCase projectService;
     private final UserSecurity userSecurity;
 
-    //admin and logged owner user
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     @Secured({"ROLE_ADMIN", "ROLE_USER"})
@@ -50,17 +49,34 @@ public class ProjectController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getById(@PathVariable Long id) {
+    public ResponseEntity<Project> getById(@PathVariable Long id, @AuthenticationPrincipal User user) {
         return projectService.findProjectById(id)
-                .map(project -> ResponseEntity.ok(project))
+                .map(project -> authorize(project, user))
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    //admin and logged owner user
+    private ResponseEntity<Project> authorize(Project project, User user){
+        if (userSecurity.isOwnerOrAdmin(project.getOwner().getName(), user)){
+            return ResponseEntity.ok(project);
+        }
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+    }
+
+
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteById(@PathVariable Long id) {
-        projectService.removeProjectById(id);
+    public ResponseEntity<?> deleteById(@PathVariable Long id, @AuthenticationPrincipal User user) {
+        Project project = findProject(id);
+        if(userSecurity.isOwnerOrAdmin(project.getOwner().getName(), user)){
+            projectService.removeProjectById(id);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+    }
+
+    private Project findProject(Long id){
+        return projectService.findProjectById(id)
+                .orElseThrow(() -> new IllegalArgumentException("No project with id="+id));
     }
 
     //admin and logged owner user
@@ -75,7 +91,7 @@ public class ProjectController {
         return new CreatedURI("/" + project.getId().toString()).uri();
     }
 
-    //admin and logged owner user
+
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void updateProject(@PathVariable Long id, @RequestBody RestProjectCommand command) {

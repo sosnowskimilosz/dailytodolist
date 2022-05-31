@@ -4,7 +4,6 @@ import com.milo.dailytodolist.owner.db.ProjectOwnerJpaRepository;
 import com.milo.dailytodolist.owner.domain.ProjectOwner;
 import com.milo.dailytodolist.project.application.port.ProjectUseCase;
 import com.milo.dailytodolist.project.db.ProjectJpaRepository;
-import com.milo.dailytodolist.project.db.TaskJpaRepository;
 import com.milo.dailytodolist.project.domain.Project;
 import com.milo.dailytodolist.project.domain.ProjectStatus;
 import com.milo.dailytodolist.uploads.application.port.UploadUseCase;
@@ -19,7 +18,6 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class ProjectService implements ProjectUseCase {
 
-    private final TaskJpaRepository taskJpaRepository;
     private final ProjectJpaRepository projectRepository;
     private final ProjectOwnerJpaRepository ownerRepository;
     private final UploadUseCase uploadService;

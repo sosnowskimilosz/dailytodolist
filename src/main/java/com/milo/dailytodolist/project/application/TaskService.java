@@ -70,10 +70,10 @@ public class TaskService implements TaskUseCase {
     public UpdateTaskResponse updateTask(UpdateTaskCommand command) {
         return taskRepository.findById(command.getId())
                 .map(task -> {
-                    Task taskToUpdate = updateTaskFields(task,command);
+                    Task taskToUpdate = updateTaskFields(task, command);
                     taskRepository.save(taskToUpdate);
                     return UpdateTaskResponse.SUCCESS;
-                }).orElseGet(()-> new UpdateTaskResponse(false,List.of("Task with id: " + command.getId() + " not found")));
+                }).orElseGet(() -> new UpdateTaskResponse(false, List.of("Task with id: " + command.getId() + " not found")));
     }
 
     @Override
@@ -83,9 +83,8 @@ public class TaskService implements TaskUseCase {
         task.setDone(!task.isDone());
     }
 
-
-    private Task updateTaskFields(Task task, UpdateTaskCommand command){
-        if(command.getTitle() != null){
+    private Task updateTaskFields(Task task, UpdateTaskCommand command) {
+        if (command.getTitle() != null) {
             task.setTitle(command.getTitle());
         }
         return task;

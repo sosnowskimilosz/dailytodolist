@@ -55,13 +55,13 @@ public class TaskController {
 
     @PutMapping("/{projectId}/tasks/{taskId}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void updateTask(@PathVariable Long taskId, @RequestBody RestTaskCommand command){
+    public void updateTask(@PathVariable Long taskId, @RequestBody RestTaskCommand command) {
         taskService.updateTask(command.toUpdateTaskCommand(taskId));
     }
 
     @PutMapping("/{projectId}/tasks/{taskId}/changestatus")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void changeStatus(@PathVariable Long taskId){
+    public void changeStatus(@PathVariable Long taskId) {
         taskService.changeDone(taskId);
     }
 

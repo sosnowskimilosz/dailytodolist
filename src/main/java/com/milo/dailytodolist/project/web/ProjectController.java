@@ -6,11 +6,15 @@ import com.milo.dailytodolist.project.application.port.ProjectUseCase.CreateProj
 import com.milo.dailytodolist.project.application.port.ProjectUseCase.UpdateProjectCommand;
 import com.milo.dailytodolist.project.domain.Project;
 import com.milo.dailytodolist.project.domain.ProjectStatus;
+import com.milo.dailytodolist.security.UserSecurity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
@@ -20,6 +24,7 @@ import javax.validation.constraints.*;
 import java.io.IOException;
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/project")
@@ -27,11 +32,21 @@ import java.util.List;
 public class ProjectController {
 
     private final ProjectUseCase projectService;
+    private final UserSecurity userSecurity;
 
+    //admin and logged owner user
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<Project> getAll() {
-        return projectService.findAllProjects();
+    @Secured({"ROLE_ADMIN", "ROLE_USER"})
+    public List<Project> getAll(@AuthenticationPrincipal User user) {
+        if (userSecurity.isAdmin(user)) {
+            return projectService.findAllProjects();
+        } else {
+            return projectService.findAllProjects()
+                    .stream()
+                    .filter(project -> userSecurity.isOwner(project.getOwner().getName(), user))
+                    .collect(Collectors.toList());
+        }
     }
 
     @GetMapping("/{id}")
@@ -41,12 +56,14 @@ public class ProjectController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    //admin and logged owner user
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteById(@PathVariable Long id) {
         projectService.removeProjectById(id);
     }
 
+    //admin and logged owner user
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Void> createProject(@Valid @RequestBody RestProjectCommand command) {
@@ -58,6 +75,7 @@ public class ProjectController {
         return new CreatedURI("/" + project.getId().toString()).uri();
     }
 
+    //admin and logged owner user
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void updateProject(@PathVariable Long id, @RequestBody RestProjectCommand command) {
@@ -68,6 +86,7 @@ public class ProjectController {
         }
     }
 
+    //admin and logged owner user
     @PutMapping(value = "/{id}/logo", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void addLogoToProject(@PathVariable Long id, @RequestParam("file") MultipartFile file) throws IOException {
@@ -79,18 +98,21 @@ public class ProjectController {
         ));
     }
 
+    //admin and logged owner user
     @DeleteMapping("/{id}/logo")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void removeProjectLogo(@PathVariable Long id) {
         projectService.removeProjectLogo(id);
     }
 
+    @Secured("ROLE_ADMIN")
     @PutMapping("/{id}/updateowner")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void changeProjectOwner(@PathVariable Long id, @RequestParam("login") String login) {
         projectService.changeProjectOwner(id, login);
     }
 
+    @Secured("ROLE_ADMIN")
     @GetMapping("/byowner")
     @ResponseStatus(HttpStatus.OK)
     public List<Project> findProjectsByOwnerLogin(@RequestParam("login") String login) {

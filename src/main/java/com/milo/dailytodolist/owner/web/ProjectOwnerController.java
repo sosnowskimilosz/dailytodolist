@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -27,11 +28,13 @@ public class ProjectOwnerController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
+    @Secured("ROLE_ADMIN")
     public List<ProjectOwner> findAll(){
         return ownerService.getAll();
     }
 
     @GetMapping("/{id}")
+    @Secured("ROLE_ADMIN")
     public ResponseEntity<ProjectOwner> findById(@PathVariable Long id){
         return ownerService.getById(id)
                 .map(ResponseEntity::ok)
@@ -39,12 +42,14 @@ public class ProjectOwnerController {
     }
 
     @GetMapping("/login")
+    @Secured("ROLE_ADMIN")
     public ResponseEntity<ProjectOwner> findByLogin(@RequestParam String login){
         return ownerService.getByLogin(login)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    // admin and logged owner user
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteById(@PathVariable Long id){
@@ -61,6 +66,7 @@ public class ProjectOwnerController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
+    @Secured("ROLE_ADMIN")
     public void updateProjectOwner(@PathVariable Long id,@RequestBody ProjectOwnerRestCommand command){
         UpdateProjectOwnerResponse response = ownerService.updateProjectOwner(command.toUpdateProjectOwnerCommand(id));
         if(!response.isSuccess()){

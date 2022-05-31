@@ -33,14 +33,14 @@ public class StartupApplication implements CommandLineRunner {
     }
 
     private void initData() {
-        ProjectOwner milosz = projectOwnerService.createProjectOwner(new CreateProjectOwnerCommand("Milosz", "pass123"));
-        ProjectOwner adam = projectOwnerService.createProjectOwner(new CreateProjectOwnerCommand("Adam", "pass123"));
+        ProjectOwner admin = projectOwnerService.createProjectOwner(new CreateProjectOwnerCommand("admin", "123"));
+        ProjectOwner user = projectOwnerService.createProjectOwner(new CreateProjectOwnerCommand("user", "123"));
         ProjectOwner marian = projectOwnerService.createProjectOwner(new CreateProjectOwnerCommand("Marian", "pass123"));
 
-        Project project1 = projectService.addProject(new CreateProjectCommand("Zakup mieszkania", milosz.getId()));
-        Project project2 = projectService.addProject(new CreateProjectCommand("Zakupy", milosz.getId()));
-        Project project3 = projectService.addProject(new CreateProjectCommand("Zmiana pracy", adam.getId()));
-        Project project4 = projectService.addProject(new CreateProjectCommand("Nauka C#", milosz.getId()));
+        Project project1 = projectService.addProject(new CreateProjectCommand("Zakup mieszkania", admin.getId()));
+        Project project2 = projectService.addProject(new CreateProjectCommand("Zakupy", admin.getId()));
+        Project project3 = projectService.addProject(new CreateProjectCommand("Zmiana pracy", user.getId()));
+        Project project4 = projectService.addProject(new CreateProjectCommand("Nauka C#", admin.getId()));
 
         Task task1 = taskService.addNewTaskToProject(new TaskUseCase.CreateTaskCommand("uzbieranie mamony", project1.getId()));
         Task task2 = taskService.addNewTaskToProject(new TaskUseCase.CreateTaskCommand("wybor mieszkania", project1.getId()));
